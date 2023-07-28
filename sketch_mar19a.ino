@@ -1,72 +1,117 @@
-#include <IRremote.hpp>
+#include <IRremote.hpp> //Importing Library
+
+//Samsung Codes take up too much space
 
 #define LED_PIN 3
-#define BUTTON_PIN_1 7
-#define BUTTON_PIN_2 8
-#define BUTTON_PIN_3 9
-#define BUTTON_PIN_4 10
-String TV;
-String tvList[3] = {"Panasonic", "LG", "Samsung"};
 
+String TV;
 void setup() {
   Serial.begin(9600);
-  TV = "Panasonic";
+  Serial.print("TV: ");
+  while (Serial.available()==0){
+  }
+  TV = Serial.readString();
+  Serial.print(TV);
   IrSender.begin(LED_PIN);
   pinMode(LED_PIN, OUTPUT);
-  pinMode(BUTTON_PIN_1, INPUT);
-  pinMode(BUTTON_PIN_2, INPUT);
-  pinMode(BUTTON_PIN_3, INPUT);
 }
 
 void loop() {
-  if(digitalRead(BUTTON_PIN_4)== HIGH){
-    if (TV.equals(tvList[2])){
-      TV = tvList[0];
+  Serial.println("What button would you like to press?");
+  while(Serial.available()==0){
+  }
+  String choice = Serial.readString();
+//  Serial.println("Choice: "+choice);
+  if (choice.equals("ON")){
+      if (TV.equals("LG")){
+        IrSender.sendNEC(4, 8, 1);
+      }
+//      else if (TV.equals("Samsung")){
+//          IrSender.sendPronto("0000 006d 0022 0003 00a9 00a8 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0040 0015 0015 0015 003f 0015 003f 0015 003f 0015 003f 0015 003f 0015 003f 0015 0702 00a9 00a8 0015 0015 0015 0e6e",10);
+//      }
+      delay(2000);
+  }
+  if (choice.equals("VOLUP")){
+      Serial.println("VOL + PRESSED");
+      if (TV.equals("LG")){
+        IrSender.sendNEC(4, 2, 1);
+      }
+//      else if (TV.equals("Samsung")){
+//        IrSender.sendPronto("0000 006d 0022 0003 00a9 00a8 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 003f 0015 003f 0015 003f 0015 0702 00a9 00a8 0015 0015 0015 0e6e",10);
+//      }
+      delay(2000);
+  }
+  if (choice.equals("VOLDOWN")){
+      if (TV.equals("LG")){
+        IrSender.sendNEC(4, 3, 1);
+      }
+//      else if (TV.equals("Samsung")){
+//        IrSender.sendPronto("0000 006d 0022 0003 00a9 00a8 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 0015 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 0015 0015 003f 0015 003f 0015 003f 0015 003f 0015 0702 00a9 00a8 0015 0015 0015 0e6e",10);
+//      }
+      delay(2000);
     }
-    else{
-       if(TV.equals(tvList[0])){
-        TV = tvList[1];
-       }
-       else if(TV.equals(tvList[1])){
-        TV = tvList[2];
-       }
-     }
-    delay(2000);
-    Serial.println("TV:"+TV);
-    digitalWrite(BUTTON_PIN_4, LOW);
+  if (choice.equals("UP")){
+      if (TV.equals("LG")){
+        IrSender.sendNEC(4, 64, 1);
+      }
+      else if (TV.equals("Samsung")){
+        IrSender.sendPronto("0000 006d 0000 0022 00a9 00a8 0015 003f 0015 0015 0015 003f 0015 0016 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 0015 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0016 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 003f 0015 003f 0015 003f 0015 003f 0015 003f 0015 003f 0015 075e",10);
+      }
+      delay(2000);
   }
-  if(TV=="Panasonic"){
-    if(digitalRead(BUTTON_PIN_1) == HIGH) {
-      Serial.println("ON/OFF PRESSED");
-      IrSender.sendPanasonic(8, 61, 2);
-      digitalWrite(BUTTON_PIN_1, LOW);
+  if (choice.equals("LEFT")){
+      Serial.println("LEFT PRESSED");
+      if (TV.equals("LG")){
+        IrSender.sendNEC(4, 7, 1);
       }
-    else if(digitalRead(BUTTON_PIN_2) == HIGH) {
-      Serial.println("VOL + PRESSED");
-      IrSender.sendPanasonic(8, 32, 3);
-      digitalWrite(BUTTON_PIN_2, LOW);
-      }
-    else if(digitalRead(BUTTON_PIN_3) == HIGH) {
-      Serial.println("VOL - PRESSED");
-      IrSender.sendPanasonic(8, 33, 3);
-      digitalWrite(BUTTON_PIN_3, LOW);
-      }
+//      else if (TV.equals("Samsung")){
+//        IrSender.sendPronto("0000 006d 0000 0022 00a9 00a8 0015 003f 0015 0015 0015 003f 0015 0016 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 0015 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 0016 0015 0015 0015 0015 0015 0015 0015 003f 0015 0015 0015 003f 0015 0015 0015 003f 0015 003f 0015 003f 0015 003f 0015 0015 0015 003f 0015 075e",10);
+//      }
+      delay(2000);
   }
-  else if(TV=="LG") {
-     if (digitalRead(BUTTON_PIN_1) == HIGH) {
-      Serial.println("ON/OFF PRESSED");
-      IrSender.sendNEC(4, 8, 3);
-      digitalWrite(BUTTON_PIN_1, LOW);
+  if (choice.equals("RIGHT")){
+      if (TV.equals("LG")){
+        IrSender.sendNEC(4, 6, 1);
       }
-    else if(digitalRead(BUTTON_PIN_2) == HIGH) {
-      Serial.println("VOL + PRESSED");
-      IrSender.sendNEC(4, 2, 3);
-      digitalWrite(BUTTON_PIN_2, LOW);
+//      else if (TV.equals("Samsung")){
+//        IrSender.sendPronto("0000 006d 0000 0022 00a9 00a8 0015 003f 0015 0015 0015 003f 0015 0016 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 0015 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 0015 0015 0015 0015 0016 0015 003f 0015 003f 0015 003f 0015 003f 0015 0015 0015 003f 0015 075e",10);
+//      }
+      delay(2000);
+    }
+  if (choice.equals("DOWN")){
+      if (TV.equals("LG")){
+        IrSender.sendNEC(4, 65, 1);
       }
-    else if(digitalRead(BUTTON_PIN_3) == HIGH) {
-      Serial.println("VOL - PRESSED");
-      IrSender.sendNEC(4, 3, 3);
-      digitalWrite(BUTTON_PIN_3, LOW);
-      }
+//      else if (TV.equals("Samsung")){
+//        IrSender.sendPronto("0000 006d 0000 0022 00a9 00a8 0015 003f 0015 0015 0015 003f 0015 0016 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 0015 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 0015 0015 003f 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 075f",10);
+//      }
+      delay(2000);
   }
+  if (choice.equals("HOME")){
+      if (TV.equals("LG")){
+        IrSender.sendNEC(4, 124, 1);
+      }
+//      else if (TV.equals("Samsung")){
+//        IrSender.sendPronto("0000 006d 0022 0003 00a9 00a8 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 0015 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 003f 0015 0015 0015 003f 0015 0015 0015 0015 0015 003f 0015 003f 0015 003f 0015 0703 00a9 00a8 0015 0015 0015 0e6e",10);
+//      }
+      delay(2000);
+  }
+  if (choice.equals("OK")){
+      if (TV.equals("LG")){
+        IrSender.sendNEC(4, 68, 1);
+      }
+//      else if (TV.equals("Samsung")){
+//        IrSender.sendPronto("0000 006c 0022 0003 00ab 00aa 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 0040 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0040 0015 003f 0015 0015 0015 0015 0015 0015 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 003f 0015 0015 0015 003f 0015 003f 0015 0712 00ab 00aa 0015 0015 0015 0e91",10);
+//      }
+      delay(2000);
+    }
+  if (choice.equals("BACK")){
+      if (TV.equals("LG")){
+        IrSender.sendNEC(4, 40, 1);
+      }
+//      else if (TV.equals("Samsung")){
+//        IrSender.sendPronto("0000 006d 0022 0003 00a9 00a8 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 003f 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 0015 003f 0015 003f 0015 0015 0015 003f 0015 0015 0015 0015 0015 003f 0015 003f 0015 0015 0015 0015 0015 003f 0015 0015 0015 003f 0015 003f 0015 0703 00a9 00a8 0015 0015 0015 0e6e",10);
+//      }
+      delay(2000);
+    }
 }
